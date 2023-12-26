@@ -1,14 +1,14 @@
+import dex.plugins.outlet.v2.util.ReleaseType
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
-    id("io.papermc.paperweight.userdev") version "1.5.11"
+    kotlin("jvm") version "1.9.+"
+    kotlin("plugin.serialization") version "1.9.+"
+    id("io.papermc.paperweight.userdev") version "1.5.+"
     id("xyz.jpenilla.run-paper") version "2.2.2"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
     id("com.modrinth.minotaur") version "2.+"
-
-//    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.github.dexman545.outlet") version "1.6.1"
 }
 
 group = properties["group"] as String
@@ -28,13 +28,13 @@ dependencies {
 
     // Kotlin libraries
     library(kotlin("stdlib"))
-    library("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    library("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
+    library("org.jetbrains.kotlinx:kotlinx-serialization-json:1.+")
+    library("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.+")
 
     // Minecraft libraries
-    library("de.miraculixx:kpaper:1.2.1")
-    library("dev.jorel:commandapi-bukkit-shade:9.3.0")
-    library("dev.jorel:commandapi-bukkit-kotlin:9.3.0")
+    library("de.miraculixx:kpaper:1.+")
+    library("dev.jorel:commandapi-bukkit-shade:9.+")
+    library("dev.jorel:commandapi-bukkit-kotlin:9.+")
 }
 
 tasks {
@@ -67,7 +67,9 @@ modrinth {
     versionNumber.set(version as String)
     versionType.set("release") // Can also be `beta` or `alpha`
     uploadFile.set(tasks.jar)
-    gameVersions.addAll((properties["supportedVersions"] as String).split(','))
+    outlet.mcVersionRange = properties["supportedVersions"] as String
+    outlet.allowedReleaseTypes = setOf(ReleaseType.RELEASE)
+    gameVersions.addAll(outlet.mcVersions())
     loaders.addAll(buildList {
         add("paper")
         add("purpur")
