@@ -2,8 +2,8 @@ import dex.plugins.outlet.v2.util.ReleaseType
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
-    kotlin("jvm") version "1.9.+"
-    kotlin("plugin.serialization") version "1.9.+"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
     id("io.papermc.paperweight.userdev") version "1.5.+"
     id("xyz.jpenilla.run-paper") version "2.2.2"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
@@ -33,8 +33,8 @@ dependencies {
 
     // Minecraft libraries
     library("de.miraculixx:kpaper:1.+")
-    library("dev.jorel:commandapi-bukkit-shade:9.+")
-    library("dev.jorel:commandapi-bukkit-kotlin:9.+")
+    library("dev.jorel:commandapi-bukkit-shade:9.3.+")
+    library("dev.jorel:commandapi-bukkit-kotlin:9.3.+")
 }
 
 tasks {
