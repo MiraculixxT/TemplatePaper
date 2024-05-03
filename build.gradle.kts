@@ -1,14 +1,16 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import dex.plugins.outlet.v2.util.ReleaseType
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
-    id("io.papermc.paperweight.userdev") version "1.5.+"
-    id("xyz.jpenilla.run-paper") version "2.2.2"
+    kotlin("jvm") version "1.9.23"
+    kotlin("plugin.serialization") version "1.9.23"
+    id("io.papermc.paperweight.userdev") version "1.7.0"
+    id("xyz.jpenilla.run-paper") version "2.2.4"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
     id("com.modrinth.minotaur") version "2.+"
     id("io.github.dexman545.outlet") version "1.6.1"
+    id("io.github.goooler.shadow") version "8.1.7"
 }
 
 group = properties["group"] as String
@@ -18,6 +20,7 @@ description = properties["description"] as String
 val gameVersion by properties
 val foliaSupport = properties["foliaSupport"] as String == "true"
 val projectName = properties["name"] as String
+val commandAPIVersion = properties["commandAPIVersion"] as String
 
 repositories {
     mavenCentral()
@@ -33,20 +36,21 @@ dependencies {
 
     // Minecraft libraries
     library("de.miraculixx:kpaper:1.+")
-    library("dev.jorel:commandapi-bukkit-shade:9.3.+")
-    library("dev.jorel:commandapi-bukkit-kotlin:9.3.+")
+    implementation("dev.jorel:commandapi-bukkit-shade:$commandAPIVersion")
+    implementation("dev.jorel:commandapi-bukkit-kotlin:$commandAPIVersion")
 }
 
 tasks {
     assemble {
+        dependsOn(shadowJar)
         dependsOn(reobfJar)
     }
     compileJava {
         options.encoding = "UTF-8"
-        options.release.set(17)
+        options.release.set(21)
     }
     compileKotlin {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
     }
 }
 
@@ -83,4 +87,13 @@ modrinth {
 
     // Project sync
     syncBodyFrom = rootProject.file("README.md").readText()
+}
+
+tasks.withType<ShadowJar> {
+    dependencies {
+        include(dependency("dev.jorel:commandapi-bukkit-shade:$commandAPIVersion"))
+    }
+    println("Relocate to $group.$name")
+    relocate("dev.jorel.commandapi", "$group.$name.commandapi")
+    minimize()
 }
